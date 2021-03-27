@@ -8,7 +8,11 @@ export const PublicRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        !user ? <Component {...props} /> : <Redirect to="/dashboard" />
+        !user ? (
+          <Component {...props} {...rest} />
+        ) : (
+          <Redirect to="/dashboard" />
+        )
       }
     />
   );

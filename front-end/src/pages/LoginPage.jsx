@@ -1,7 +1,7 @@
 import { createRef } from "react";
 import axios from "axios";
 
-export function LoginPage() {
+export function LoginPage({ setupSocket }) {
   const emailRef = createRef();
   const passwordRef = createRef();
 
@@ -17,7 +17,11 @@ export function LoginPage() {
       });
       // localStorage is better then cookie: https://www.reddit.com/r/Frontend/comments/cubcpj/local_storage_vs_cookies_for_auth_tokens/
       localStorage.setItem("CC_Token", res.data.token);
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Basic ${res.data.token}`;
       // Push to Home or DashBoard
+      setupSocket();
     } catch (e) {
       console.log(e);
       //TODO Push Notification

@@ -20,4 +20,10 @@ const createChatroom = async (req, res) => {
   });
 };
 
-module.exports = { createChatroom };
+const getAllChatroom = async (req, res) => {
+  const chatrooms = await Chatroom.find({});
+
+  res.json(chatrooms);
+};
+
+module.exports = { createChatroom, getAllChatroom };

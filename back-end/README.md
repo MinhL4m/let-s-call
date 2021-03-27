@@ -46,3 +46,6 @@ Others Middleware will catch other type of error
 
 - [Learn more about socket](https://stackabuse.com/node-js-websocket-examples-with-socket-io/)
 
+- [Doc](https://socket.io/docs/v3/rooms/)
+
+- Look at file `bin/www` to start study the code

@@ -15,7 +15,7 @@ export function LoginPage({ setupSocket }) {
         email,
         password,
       });
-      // localStorage is better then cookie: https://www.reddit.com/r/Frontend/comments/cubcpj/local_storage_vs_cookies_for_auth_tokens/
+       
       localStorage.setItem("CC_Token", res.data.token);
       axios.defaults.headers.common[
         "Authorization"

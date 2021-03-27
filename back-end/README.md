@@ -9,7 +9,7 @@
 **mongoose**: Connect to MongoDB
 **morgan**: HTTP request logger middleware for node.js
 
-----------------------
+---
 
 ## JWT
 
@@ -32,10 +32,17 @@ const auth = require("../middlewares/auth");
 router.post("/", auth, catchErrors(createChatroom));
 ```
 
--------------------------------
+---
 
 ## Catch Error (handlers/errorHandler.js)
 
 **catchError**: receive a route. If that route throught any error, this function will catch it. If the error type is not String which dev manually throw, then pass it to next middleware.
 
 Others Middleware will catch other type of error
+
+---
+
+## Socket
+
+- [Learn more about socket](https://stackabuse.com/node-js-websocket-examples-with-socket-io/)
+

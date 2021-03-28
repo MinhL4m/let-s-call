@@ -86,3 +86,5 @@ Stack: MERN
   - When receive call
 
 - Live Stream (RTMP) (Consider)[https://quantizd.com/building-live-streaming-app-with-node-js-and-react/]: Thinking of implemtn
+
+- Watch Youtube together (react-youtube): Still consider. 

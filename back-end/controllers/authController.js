@@ -40,7 +40,7 @@ exports.logIn = async (req, res) => {
   if (!user) throw "Email or Password didn't match";
 
   // sign token to send back to client
-  const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+  const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET);
   res.json({
     message: true,
     token,
@@ -56,8 +56,11 @@ exports.checkLogIn = async (req, res) => {
     const payload = await jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findOne({ _id: payload.id });
     user
-      ? res.json({ authenication: true, user: user })
-      : res.josn({ authenication: false });
+      ? res.json({
+          authenication: true,
+          user: { email: user.email, name: user.name },
+        })
+      : res.json({ authenication: false });
   } catch (err) {
     res.json({ authenication: false });
   }

@@ -41,12 +41,15 @@ const jwt = require("jwt-then");
 const { onConnection } = require("../controllers/socketController");
 io.use(async (socket, next) => {
   try {
-    // get token from query.
     const token = socket.handshake.query.token;
     const payload = await jwt.verify(token, process.env.JWT_SECRET);
+    //  client side will have "connect_error" event
+    if (!payload.id) next(new Error("not authorized"));
     socket.userId = payload.id;
     next();
-  } catch (err) {}
+  } catch (e) {
+    if (!payload.id) next(new Error("not authorized"));
+  }
 });
 io.on("connection", (socket) => onConnection(socket, io));
 

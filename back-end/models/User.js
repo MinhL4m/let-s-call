@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: "password is required",
     },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

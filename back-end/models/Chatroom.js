@@ -5,6 +5,7 @@ const chatRoomSchema = mongoose.Schema({
     type: String,
     required: "Name is required",
   },
+  owners: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 module.export = mongoose.model("Chatroom", chatRoomSchema);

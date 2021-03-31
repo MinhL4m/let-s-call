@@ -3,15 +3,18 @@ const mongoose = require("mongoose");
 const Chatroom = mongoose.model("Chatroom");
 
 const createChatroom = async (req, res) => {
-  const { name } = req.body;
+  const { userId, friendId, userName, friendName } = req.body;
 
-  if (!NAMEREGEX.test(name)) throw "Name can not contain alphabets";
+  const chatroomExists = await Chatroom.findOne({
+    owners: { $all: [userId, friendId] },
+  });
 
-  const chatroomExists = await Chatroom.findOne({ name });
+  if (chatroomExists) throw "Room is already existed";
 
-  if (chatroomExists) throw "Name already exist";
-
-  const chatroom = new Chatroom({ name });
+  const chatroom = new Chatroom({
+    name: `${userName}, ${friendName}`,
+    owners: [userId, friendId],
+  });
 
   await chatroom.save();
 
@@ -21,7 +24,9 @@ const createChatroom = async (req, res) => {
 };
 
 const getAllChatroom = async (req, res) => {
-  const chatrooms = await Chatroom.find({});
+  const { userId } = req.query;
+  if (!userId) throw "invalid query";
+  const chatrooms = await Chatroom.find({ owners: { $in: [userId] } });
 
   res.json(chatrooms);
 };

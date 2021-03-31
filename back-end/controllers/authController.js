@@ -44,6 +44,11 @@ exports.logIn = async (req, res) => {
   res.json({
     message: true,
     token,
+    user: {
+      name: user.name,
+      email: user.email,
+      id: user._id,
+    },
   });
 };
 
@@ -58,7 +63,7 @@ exports.checkLogIn = async (req, res) => {
     user
       ? res.json({
           authenication: true,
-          user: { email: user.email, name: user.name },
+          user: { email: user.email, name: user.name, id: user._id },
         })
       : res.json({ authenication: false });
   } catch (err) {

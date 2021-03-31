@@ -1,0 +1,28 @@
+.TypeAheadDropDown ul::before {
+  content: "";
+}
+
+.suggest-container {
+  position: relative;
+}
+
+.TypeAheadDropDown ul {
+  list-style-type: none;
+  position: absolute;
+  top: 0;
+  background-color: #fff;
+  text-align: left;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.TypeAheadDropDown li {
+  padding: 10px 5px;
+  cursor: pointer;
+}
+
+.TypeAheadDropDown li:hover {
+  background: lightgray;
+  text-decoration: underline;
+}

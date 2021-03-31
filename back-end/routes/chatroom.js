@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const { get } = require("mongoose");
-const { createChatroom, getAllChatroom } = require("../controllers/chatroomController");
+const {
+  createChatroom,
+  getAllChatroom,
+} = require("../controllers/chatroomController");
 const { catchErrors } = require("../handlers/errorHandler");
 
 const auth = require("../middlewares/auth");

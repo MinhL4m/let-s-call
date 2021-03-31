@@ -1,50 +1,46 @@
 import { useState, useEffect } from "react";
+import { useUserValue } from "../context/user-provider";
 import { Link } from "react-router-dom";
 import axios from "axios";
-export function ChatroomPage({socket}) {
+import { RoomCreate } from "../components/dashboard/RoomCreate";
+export function ChatroomPage({ socket }) {
   const [chatrooms, setChatrooms] = useState([]);
-  // TODO add loading??
+  const { user } = useUserValue();
 
   useEffect(() => {
     async function getChatroom() {
+      console.log(user);
       try {
-        let res = await axios.get("http://localhost:3001/chatroom");
+        let res = await axios.get("http://localhost:3001/chatroom", {
+          params: { userId: user.id },
+        });
         setChatrooms(res.data);
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     }
 
     getChatroom();
   }, []);
 
   return (
-    <div className="card">
-      <div className="card--header">Create Room</div>
-      <div className="card--body">
-        <form className="card--form">
-          <div className="card--input">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              name="name"
-              className="card--name"
-              placeholder="My Room"
-            />
-          </div>
-          <button>Create Room</button>
-          <div className="chatrooms">
-            {chatrooms.map((chatroom) => (
-              <div key={chatroom._id} className="chatroom">
-                <div>{chatroom.name}</div>
-                <Link to={"/chat/" + chatroom._id}>
-                  <div className="join">Join</div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </form>
-      </div>
+    <div className="container">
+      <RoomCreate />
+      <hr />
+      <h2 className="text-center ">List Room</h2>
+      <ul className="list-group list-group-flush">
+        {chatrooms.length > 0 &&
+          chatrooms.map((chatroom) => (
+            <li
+              key={chatroom._id}
+              className="list-group-item d-flex d-flex justify-content-between"
+            >
+              <div>{chatroom.name}</div>
+              <Link to={"/chat/" + chatroom._id}>
+                <div className="join">Join</div>
+              </Link>
+            </li>
+          ))}
+      </ul>
+      {chatrooms.length === 0 && <p class="text-center mt-3">Not room found</p>}
     </div>
   );
 }

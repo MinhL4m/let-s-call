@@ -8,12 +8,10 @@ Stack: MERN
 
 ### Front-end
 
-- Update UI with Material UI lib
 - Implement forgetPasswordPage()
 
 ### Back-end
 
-- Implement getRoomsByUser()
 - Implement forgetPassword()
 
 ## Features
@@ -44,11 +42,11 @@ Stack: MERN
 
   - Send email with generated link: Not implement
 
-- Add Friend: Not implement
+- Add Friend: Done backend
 
-  - Consider using system like discord: Name and id?
+  - Using ID
 
-- Unfriend: Not implement
+- Unfriend: Done backend
 
 - Get room:
 
@@ -87,4 +85,4 @@ Stack: MERN
 
 - Live Stream (RTMP) (Consider)[https://quantizd.com/building-live-streaming-app-with-node-js-and-react/]: Thinking of implemtn
 
-- Watch Youtube together (react-youtube): Still consider. 
+- Watch Youtube together (react-youtube): Still consider.

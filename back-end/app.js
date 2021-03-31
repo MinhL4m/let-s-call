@@ -33,6 +33,8 @@ app.use(cors());
 // Route
 app.use("/auth", require("./routes/auth"));
 app.use("/chatroom", require("./routes/chatroom"));
+app.use("/friend", require("./routes/friend"));
+app.use("/message", require("./routes/message"));
 
 // Error Handler
 const errorHandlers = require("./handlers/errorHandler");

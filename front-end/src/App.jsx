@@ -6,7 +6,7 @@ import { UserProvider } from "./context/user-provider";
 import { ChatPage } from "./pages/ChatPage";
 import { ChatroomPage } from "./pages/ChatroomPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { LoginPage } from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import io from "socket.io-client";
 
@@ -24,7 +24,7 @@ function App() {
       const newSocket = io("http://localhost:3001", {
         transports: ["websocket"],
         query: {
-          token: localStorage.getItem("CC_Token"),
+          token: token,
         },
       });
 
@@ -53,28 +53,23 @@ function App() {
           <PublicRoute
             path="/login"
             component={LoginPage}
-            setSocket={setSocket}
+            setupSocket={setupSocket}
             exact
           />
           <PublicRoute path="/register" component={RegisterPage} exact />
-          <PrivateRoute
-            path="/dashboard"
-            component={DashboardPage}
-            socket={socket}
-            exact
-          />
-          <PrivateRoute
-            path="/chatroom"
+          {/* <PrivateRoute
+            path="/"
             component={ChatroomPage}
             socket={socket}
             exact
-          />
+          /> */}
           <PrivateRoute
             path="/chat/:id"
             component={ChatPage}
             socket={socket}
             exact
           />
+          <PrivateRoute path="/" component={DashboardPage} />
         </Switch>
       </BrowserRouter>
     </UserProvider>

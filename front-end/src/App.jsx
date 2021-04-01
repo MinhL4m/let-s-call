@@ -3,8 +3,6 @@ import { BrowserRouter, Switch } from "react-router-dom";
 import { PrivateRoute } from "./components/common/PrivateRoute";
 import { PublicRoute } from "./components/common/PublicRoute";
 import { UserProvider } from "./context/user-provider";
-import { ChatPage } from "./pages/ChatPage";
-import { ChatroomPage } from "./pages/ChatroomPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
@@ -57,19 +55,7 @@ function App() {
             exact
           />
           <PublicRoute path="/register" component={RegisterPage} exact />
-          {/* <PrivateRoute
-            path="/"
-            component={ChatroomPage}
-            socket={socket}
-            exact
-          /> */}
-          <PrivateRoute
-            path="/chat/:id"
-            component={ChatPage}
-            socket={socket}
-            exact
-          />
-          <PrivateRoute path="/" component={DashboardPage} />
+          <PrivateRoute path="/" component={DashboardPage} socket={socket} />
         </Switch>
       </BrowserRouter>
     </UserProvider>

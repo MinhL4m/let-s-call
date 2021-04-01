@@ -3,6 +3,7 @@ import { useUserValue } from "../context/user-provider";
 import { Link, Route } from "react-router-dom";
 import { ChatroomPage } from "./ChatroomPage";
 import { FriendPage } from "./FriendPage";
+import { ChatPage } from "./ChatPage";
 
 export function DashboardPage({ socket }) {
   const { user } = useUserValue();
@@ -60,6 +61,10 @@ export function DashboardPage({ socket }) {
         <div className="container-fluid">
           <Route path="/rooms" component={ChatroomPage}></Route>
           <Route path="/friends" component={FriendPage}></Route>
+          <Route
+            path="/chat/:id"
+            render={(props) => <ChatPage {...props} socket={socket} />}
+          ></Route>
         </div>
       </div>
     </div>

@@ -9,7 +9,6 @@ export function ChatroomPage({ socket }) {
 
   useEffect(() => {
     async function getChatroom() {
-      console.log(user);
       try {
         let res = await axios.get("http://localhost:3001/chatroom", {
           params: { userId: user.id },
@@ -40,7 +39,7 @@ export function ChatroomPage({ socket }) {
             </li>
           ))}
       </ul>
-      {chatrooms.length === 0 && <p class="text-center mt-3">Not room found</p>}
+      {chatrooms.length === 0 && <p className="text-center mt-3">Not room found</p>}
     </div>
   );
 }

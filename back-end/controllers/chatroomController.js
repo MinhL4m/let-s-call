@@ -16,10 +16,8 @@ const createChatroom = async (req, res) => {
     owners: [userId, friendId],
   });
 
-  await chatroom.save();
-
-  res.json({
-    message: true,
+  await chatroom.save((err, room) => {
+    res.json(room);
   });
 };
 

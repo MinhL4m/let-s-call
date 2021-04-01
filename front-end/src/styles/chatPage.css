@@ -1,0 +1,84 @@
+.msg-list {
+  width: 100%;
+}
+.messenger-container {
+  padding: 8px 15px 8px 13px;
+  margin: 0 0 25px 35px;
+  float: left;
+  max-width: 82%;
+  background: #f2f2f2;
+  border-radius: 10px;
+  min-width: 70px;
+  position: relative;
+  box-sizing: border-box;
+}
+.messenger-container p {
+  color: #3d3d3d;
+  font-size: 12px;
+  margin-bottom: 6px;
+  line-height: 18px;
+  word-wrap: break-word;
+  margin: 0;
+}
+.sender .messenger-container {
+  float: right;
+  margin-right: 35px;
+  width: auto;
+  background: #d5dbff;
+  margin-left: 0px;
+  padding: 8px 15px 8px 13px;
+}
+.clear {
+  clear: both;
+  width: 100%;
+  padding: 0px !important;
+  margin: 0px;
+  height: 0px;
+}
+.messenger-container::before {
+  width: 0px;
+  height: 0px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+
+  border-right: 15px solid #f2f2f2;
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: -15px;
+}
+.sender .messenger-container::before {
+  width: 0px;
+  height: 0px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 15px solid #d5dbff;
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 99%;
+  border-right: none;
+}
+
+.time {
+  font-size: 10px !important;
+  display: block;
+}
+
+.name {
+  font-size: 11px !important;
+  font-weight: bold !important;
+  display: block;
+}
+
+.chatroom-actions {
+  padding: 20px 0;
+  border-top: 0.5px solid #333;
+  position: sticky;
+  background-color: #fff;
+  bottom: 0;
+}
+
+.send-btn {
+  margin: 0 0 0 20px;
+}

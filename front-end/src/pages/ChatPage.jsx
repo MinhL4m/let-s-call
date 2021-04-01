@@ -1,14 +1,72 @@
 import { useEffect, useState, createRef } from "react";
 import { useUserValue } from "../context/user-provider";
+import axios from "axios";
+import "../styles/chatPage.css";
+import { ChatBubble } from "../components/chat/ChatBubble";
+import { ChatInput } from "../components/chat/ChatInput";
+import { useHookWithRefCallback } from "../hooks/useHookWithRefCallBack";
 
 export const ChatPage = ({ match, socket }) => {
   const chatroomId = match.params.id;
   const { user } = useUserValue();
+  let observer = null;
+
+  const messageRef = createRef(null);
   const [messages, setMessages] = useState([]);
 
-  const messageRef = createRef();
+  const scrollToBottom = (node) => {
+    if (node) {
+      node.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  const [bottomRef] = useHookWithRefCallback({ callback: scrollToBottom });
 
-  const sendMessage = () => {
+  const [topRef] = useHookWithRefCallback({
+    // Closure trap the messages state as the beginning messages state
+    // create closure to use tempMessages to keep track of the message state
+    callback: (node) => {
+      if (node) {
+        observer = new IntersectionObserver(
+          (() => {
+            let tempMessages = messages;
+            let isReachLastMessage = false;
+            let isFetching = false;
+            return async () => {
+              if (!isReachLastMessage && !isFetching) {
+                const newMessages = await fetchMessageOnTop(
+                  tempMessages,
+                  isReachLastMessage,
+                  isFetching
+                );
+                isReachLastMessage = newMessages.data?.length !== 10;
+                tempMessages = [
+                  ...(newMessages.data.reverse() ?? []),
+                  ...(tempMessages ?? []),
+                ];
+                setMessages(tempMessages);
+                isFetching = false;
+              }
+            };
+          })(),
+          observerOptions
+        );
+        if (node) observer.observe(node);
+      }
+    },
+    cleanup: (node) => {
+      if (node && observer) observer.unobserve(node);
+    },
+  });
+
+  const observerOptions = {
+    root: null,
+    rootMargin: "-20px",
+    threshold: 1,
+  };
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    console.log(socket);
     if (socket) {
       socket.emit("chatroomMessage", {
         chatroomId,
@@ -25,16 +83,24 @@ export const ChatPage = ({ match, socket }) => {
    */
   useEffect(() => {
     if (socket) {
-      socket.on("newMessage", (message) => {
-        setMessages([...messages, message]);
+      socket.on("newMessage", ({ message }) => {
+        setMessages([...(messages ?? []), message]);
+        scrollToBottom();
       });
     }
+    return () => {
+      if (socket) {
+        socket.off("newMessage");
+      }
+    };
   }, [messages]);
 
   useEffect(() => {
     if (socket) {
       socket.emit("joinRoom", { chatroomId });
     }
+
+    fetchMessage(true);
 
     return () => {
       if (socket) {
@@ -45,48 +111,57 @@ export const ChatPage = ({ match, socket }) => {
     };
   }, []);
 
+  const fetchMessage = async (first = false) => {
+    console.log(messages);
+    let lastDate = first ? new Date() : messages[0].createdAt;
+
+    try {
+      const newMessages = await axios.get("http://localhost:3001/message", {
+        params: {
+          roomId: chatroomId,
+          lastDate: lastDate,
+        },
+      });
+      setMessages([...(newMessages.data.reverse() ?? []), ...(messages ?? [])]);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fetchMessageOnTop = async (messages, isFetching) => {
+    console.log(messages);
+    let lastDate = messages[0]?.createdAt ?? new Date();
+    isFetching = true;
+    try {
+      return await axios.get("http://localhost:3001/message", {
+        params: {
+          roomId: chatroomId,
+          lastDate: lastDate,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      isFetching = true;
+    }
+  };
+
   return (
-    <div className="charoomPage">
-      <div className="chatroom--section">
-        <div className="chatroom--header">Chatroom Name</div>
-        <div className="chatroom--content">
-          {/* <div className="message">
-            <span className="otherMessage">ABC:</span> Yo
-          </div>
-          <div className="message">
-            <span className="ownMessage">You:</span> Sup
-          </div> */}
-          {messages.map((message, i) => {
+    <div className="container">
+      <div className="fetch-new" ref={topRef}></div>
+      <div>
+        {messages?.length > 0 &&
+          messages.map((message, i) => {
             return (
-              <div key={i} className="message">
-                <span
-                  className={
-                    user._id === message.userId ? "ownMessage" : "otherMessage"
-                  }
-                >
-                  {message.name}:
-                </span>{" "}
-                {message.message}
-              </div>
+              <ChatBubble
+                key={message._id}
+                message={message}
+                user={user}
+                lastRef={i === messages.length - 1 ? bottomRef : null}
+              />
             );
           })}
-        </div>
-        <div className="chatroom--actions">
-          <div>
-            <input
-              type="text"
-              name="message"
-              placeholder="Type here"
-              ref={messageRef}
-            />
-          </div>
-          <div>
-            <button className="send" onClick={sendMessage}>
-              Send
-            </button>
-          </div>
-        </div>
       </div>
+      <ChatInput messageRef={messageRef} sendMessage={sendMessage} />
     </div>
   );
 };

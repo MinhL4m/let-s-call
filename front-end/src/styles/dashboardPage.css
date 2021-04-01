@@ -2,8 +2,14 @@
   overflow-x: hidden;
 }
 
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
 #sidebar-wrapper {
-  min-height: 100vh;
+  height: 100vh;
   margin-left: -15rem;
   -webkit-transition: margin 0.25s ease-out;
   -moz-transition: margin 0.25s ease-out;
@@ -22,6 +28,8 @@
 
 #page-content-wrapper {
   min-width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 #wrapper.toggled #sidebar-wrapper {

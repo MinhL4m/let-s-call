@@ -26,17 +26,15 @@ const onConnection = (socket, io) => {
       const newMessage = new Message({
         chatroom: chatroomId,
         user: socket.userId,
-        message,
-      });
-
-      // to all socket in chatroom, emit message
-      io.to(chatroomId).emit("newMessage", {
-        message,
         name: user.name,
-        userId: socket.userId,
+        message,
       });
-
-      await newMessage.save();
+      await newMessage.save((err, savedMessage) => {
+        // to all socket in chatroom, emit message
+        io.to(chatroomId).emit("newMessage", {
+          message: savedMessage,
+        });
+      });
     }
   });
 };

@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Message = mongoose.model("Message");
 const User = mongoose.model("User");
+const Notification = mongoose.model("Notification");
+const Room = mongoose.model("Chatroom");
+const webpush = require("web-push");
 
 const onConnection = (socket, io) => {
   console.log("Connected: " + socket.userId);
@@ -29,11 +32,32 @@ const onConnection = (socket, io) => {
         name: user.name,
         message,
       });
-      await newMessage.save((err, savedMessage) => {
+      await newMessage.save(async (err, savedMessage) => {
         // to all socket in chatroom, emit message
         io.to(chatroomId).emit("newMessage", {
           message: savedMessage,
         });
+        const room = await Room.findOne({ _id: chatroomId });
+        const anotherUser = room.owners.find((owner) => {
+          return owner != socket.userId;
+        });
+
+        const notification = await Notification.findOne({ user: anotherUser });
+        const payload = JSON.stringify({
+          title: `${user.name} send you message!`,
+          body:
+            message.length > 15
+              ? `${message.substr(0, 15)}...`
+              : message.substr(0, 15),
+        });
+        if (notification) {
+          for (subscription of notification.subscriptions) {
+            webpush
+              .sendNotification(subscription, payload)
+              .then((result) => console.log(result))
+              .catch((e) => console.log(e.stack));
+          }
+        }
       });
     }
   });

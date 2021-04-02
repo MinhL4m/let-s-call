@@ -5,6 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 require("dotenv").config();
+const webpush = require("web-push");
 
 // ----------- Config connection to Mongo---------
 const mongoose = require("mongoose");
@@ -18,6 +19,7 @@ mongoose
 require("./models/Chatroom");
 require("./models/Message");
 require("./models/User");
+require("./models/Notification");
 
 // --------------Expres-------
 var app = express();
@@ -29,12 +31,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
-
+webpush.setVapidDetails(
+  process.env.WEB_PUSH_CONTACT,
+  process.env.PUBLIC_VAPID_KEY,
+  process.env.PRIVATE_VAPID_KEY
+);
 // Route
 app.use("/auth", require("./routes/auth"));
 app.use("/chatroom", require("./routes/chatroom"));
 app.use("/friend", require("./routes/friend"));
 app.use("/message", require("./routes/message"));
+app.use("/notification", require("./routes/notification"));
 
 // Error Handler
 const errorHandlers = require("./handlers/errorHandler");

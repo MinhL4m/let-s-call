@@ -66,7 +66,6 @@ export const ChatPage = ({ match, socket }) => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(socket);
     if (socket) {
       socket.emit("chatroomMessage", {
         chatroomId,
@@ -85,7 +84,6 @@ export const ChatPage = ({ match, socket }) => {
     if (socket) {
       socket.on("newMessage", ({ message }) => {
         setMessages([...(messages ?? []), message]);
-        scrollToBottom();
       });
     }
     return () => {
@@ -112,7 +110,6 @@ export const ChatPage = ({ match, socket }) => {
   }, []);
 
   const fetchMessage = async (first = false) => {
-    console.log(messages);
     let lastDate = first ? new Date() : messages[0].createdAt;
 
     try {
@@ -129,7 +126,6 @@ export const ChatPage = ({ match, socket }) => {
   };
 
   const fetchMessageOnTop = async (messages, isFetching) => {
-    console.log(messages);
     let lastDate = messages[0]?.createdAt ?? new Date();
     isFetching = true;
     try {

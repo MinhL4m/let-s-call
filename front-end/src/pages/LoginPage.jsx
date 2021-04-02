@@ -13,7 +13,6 @@ function LoginPage({ setupSocket }) {
 
   async function login() {
     window.event.preventDefault();
-    console.log(history);
     setError("");
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
@@ -29,7 +28,6 @@ function LoginPage({ setupSocket }) {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Basic ${res.data.token}`;
-      setupSocket();
       setUser(res.data.user);
       history.replace("/rooms");
     } catch (e) {

@@ -33,10 +33,11 @@ Stack: MERN
   - Backend check for JWT using `auth` middleware: Done
   - Refresh Token: maybe??
 
-- Logout: Not implemnt
+- Logout: Done
 
   - Remove JWT in storage
   - remove user state in front end
+  - Move user in this device from notification list
 
 - Reset password (Consider)[https://blog.logrocket.com/implementing-a-secure-password-reset-in-node-js/]
 
@@ -68,7 +69,7 @@ Stack: MERN
   - Send and receive message from all user in the room: Done
     - Text: Done
     - Image + file: Firebase Storage are incosideration
-  - Load old file: Not implement
+  - Load old messages: Done -> old message old onscroll
 
 - Video call (WebRTC):
 
@@ -80,7 +81,7 @@ Stack: MERN
 
 - Notification: (Consider)[https://medium.com/@seladir/how-to-implement-web-push-notifications-in-your-node-react-app-9bed79b53f34]:
 
-  - When receive chat
+  - When receive chat: Done
   - When receive call
 
 - Live Stream (RTMP) (Consider)[https://quantizd.com/building-live-streaming-app-with-node-js-and-react/]: Thinking of implemtn

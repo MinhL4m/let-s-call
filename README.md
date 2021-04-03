@@ -71,7 +71,7 @@ Stack: MERN
     - Image + file: Firebase Storage are incosideration
   - Load old messages: Done -> old message old onscroll
 
-- Video call (WebRTC):
+- Video call (WebRTC): Only perfect case -> both clients in the room
 
   - Mute:
   - Turn off camera:
@@ -82,8 +82,3 @@ Stack: MERN
 - Notification: (Consider)[https://medium.com/@seladir/how-to-implement-web-push-notifications-in-your-node-react-app-9bed79b53f34]:
 
   - When receive chat: Done
-  - When receive call
-
-- Live Stream (RTMP) (Consider)[https://quantizd.com/building-live-streaming-app-with-node-js-and-react/]: Thinking of implemtn
-
-- Watch Youtube together (react-youtube): Still consider.

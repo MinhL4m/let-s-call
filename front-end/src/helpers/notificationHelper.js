@@ -61,7 +61,7 @@ export function subscribeUser(userId) {
                   }
                 });
             } else {
-              console.log(existedSubscription);
+              sendSubscription(existedSubscription, userId);
             }
           });
       })

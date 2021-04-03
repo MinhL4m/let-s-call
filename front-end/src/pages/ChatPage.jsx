@@ -38,9 +38,9 @@ export const ChatPage = ({ match, socket }) => {
                   isReachLastMessage,
                   isFetching
                 );
-                isReachLastMessage = newMessages.data?.length !== 10;
+                isReachLastMessage = newMessages?.data?.length ?? 0 !== 10;
                 tempMessages = [
-                  ...(newMessages.data.reverse() ?? []),
+                  ...(newMessages?.data?.reverse() ?? []),
                   ...(tempMessages ?? []),
                 ];
                 setMessages(tempMessages);
@@ -83,6 +83,7 @@ export const ChatPage = ({ match, socket }) => {
   useEffect(() => {
     if (socket) {
       socket.on("newMessage", ({ message }) => {
+        console.log("here");
         setMessages([...(messages ?? []), message]);
       });
     }
@@ -144,7 +145,7 @@ export const ChatPage = ({ match, socket }) => {
   return (
     <div className="container">
       <div className="fetch-new" ref={topRef}></div>
-      <div>
+      <div className="messages">
         {messages?.length > 0 &&
           messages.map((message, i) => {
             return (

@@ -4,7 +4,6 @@ const Notification = mongoose.model("Notification");
 
 const subscribe = async (req, res) => {
   const { subscription, userId } = req.body;
-  console.log(subscription);
   const sub = await Notification.findOne({ user: userId });
 
   if (sub) {

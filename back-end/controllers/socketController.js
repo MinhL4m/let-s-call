@@ -7,6 +7,7 @@ const webpush = require("web-push");
 
 const onConnection = (socket, io) => {
   console.log("Connected: " + socket.userId);
+
   socket.on("disconnect", () => {
     console.log("Disconnect:" + socket.userId);
   });
@@ -24,6 +25,7 @@ const onConnection = (socket, io) => {
   });
 
   socket.on("chatroomMessage", async ({ chatroomId, message }) => {
+    console.log(chatroomId);
     if (message.trim().length > 0) {
       const user = await User.findOne({ _id: socket.userId });
       const newMessage = new Message({
@@ -32,35 +34,37 @@ const onConnection = (socket, io) => {
         name: user.name,
         message,
       });
-      await newMessage.save(async (err, savedMessage) => {
+      await newMessage.save((err, savedMessage) => {
         // to all socket in chatroom, emit message
         io.to(chatroomId).emit("newMessage", {
           message: savedMessage,
         });
-        const room = await Room.findOne({ _id: chatroomId });
-        const anotherUser = room.owners.find((owner) => {
-          return owner != socket.userId;
-        });
-
-        const notification = await Notification.findOne({ user: anotherUser });
-        const payload = JSON.stringify({
-          title: `${user.name} send you message!`,
-          body:
-            message.length > 15
-              ? `${message.substr(0, 15)}...`
-              : message.substr(0, 15),
-        });
-        if (notification) {
-          for (subscription of notification.subscriptions) {
-            webpush
-              .sendNotification(subscription, payload)
-              .then((result) => console.log(result))
-              .catch((e) => console.log(e.stack));
-          }
-        }
+        sentNotification(chatroomId, socket.userId, user.name, message);
       });
     }
   });
+
+const sentNotification = async (chatroomId, userId, name, message) => {
+  const room = await Room.findOne({ _id: chatroomId });
+  const anotherUser = room.owners.find((owner) => {
+    return owner != userId;
+  });
+
+  const notification = await Notification.findOne({ user: anotherUser });
+  const payload = JSON.stringify({
+    title: `${name} send you message!`,
+    body:
+      message.length > 15
+        ? `${message.substr(0, 15)}...`
+        : message.substr(0, 15),
+  });
+  if (notification) {
+    for (subscription of notification.subscriptions) {
+      webpush
+        .sendNotification(subscription, payload)
+        .catch((e) => console.log(e.stack));
+    }
+  }
 };
 
 module.exports = { onConnection };

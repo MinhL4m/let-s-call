@@ -10,6 +10,7 @@ import io from "socket.io-client";
 
 function DashboardPage({ history }) {
   const { user, setUser } = useUserValue();
+  const [isConnecting, setIsConnecting] = useState(true);
   const [socket, setSocket] = useState(null);
   let timeout = null;
 
@@ -36,6 +37,7 @@ function DashboardPage({ history }) {
 
       newSocket.on("connect", () => {
         console.log("sucess connect socket");
+        setIsConnecting(false);
         if (timeout) {
           clearTimeout(timeout);
         }
@@ -103,22 +105,24 @@ function DashboardPage({ history }) {
         </div>
       </div>
 
-      <div id="page-content-wrapper">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-          <button className="btn " id="menu-toggle" onClick={toggleSideBar}>
-            <span className="navbar-toggler-icon"></span>
-          </button>
-        </nav>
+      {!isConnecting && (
+        <div id="page-content-wrapper">
+          <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button className="btn " id="menu-toggle" onClick={toggleSideBar}>
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          </nav>
 
-        <div className="container-fluid">
-          <Route path="/rooms" component={ChatroomPage}></Route>
-          <Route path="/friends" component={FriendPage}></Route>
-          <Route
-            path="/chat/:id"
-            render={(props) => <ChatPage {...props} socket={socket} />}
-          ></Route>
+          <div className="container-fluid">
+            <Route path="/rooms" component={ChatroomPage}></Route>
+            <Route path="/friends" component={FriendPage}></Route>
+            <Route
+              path="/chat/:id"
+              render={(props) => <ChatPage {...props} socket={socket} />}
+            ></Route>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -82,3 +82,7 @@
 .send-btn {
   margin: 0 0 0 20px;
 }
+
+.messages {
+  min-height: 86vh;
+}

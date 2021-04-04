@@ -44,6 +44,35 @@ const onConnection = (socket, io) => {
     }
   });
 
+  /** Call socket */
+  socket.on("startCall", ({ chatroomId, socketId }) => {
+    if (io.sockets.adapter.rooms.get(`${chatroomId}`).size < 2) {
+      io.to(socketId).emit("otherNotInRoom");
+    } else {
+      socket.broadcast.to(chatroomId).emit("receiveCall");
+    }
+  });
+  socket.on("denyCall", ({ chatroomId }) => {
+    socket.broadcast.to(chatroomId).emit("denyCall");
+  });
+
+  socket.on("establishCall", ({ chatroomId, socketId, message }) => {
+    if (io.sockets.adapter.rooms.get(`${chatroomId}`).size < 2) {
+      io.to(socketId).emit("endCall");
+    } else {
+      socket.broadcast.to(chatroomId).emit("establishCall", message);
+    }
+  });
+
+  socket.on("endCall", ({ chatroomId }) => {
+    io.to(chatroomId).emit("endCall");
+  });
+
+  socket.on("noPermission", ({ chatroomId }) => {
+    io.to(chatroomId).emit("noPermission");
+  });
+};
+
 const sentNotification = async (chatroomId, userId, name, message) => {
   const room = await Room.findOne({ _id: chatroomId });
   const anotherUser = room.owners.find((owner) => {

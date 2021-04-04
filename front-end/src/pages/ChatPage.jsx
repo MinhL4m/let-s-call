@@ -5,6 +5,8 @@ import "../styles/chatPage.css";
 import { ChatBubble } from "../components/chat/ChatBubble";
 import { ChatInput } from "../components/chat/ChatInput";
 import { useHookWithRefCallback } from "../hooks/useHookWithRefCallBack";
+import { Modal } from "../components/common/Modal";
+import { VideoCall } from "../components/chat/VideoCall";
 
 export const ChatPage = ({ match, socket }) => {
   const chatroomId = match.params.id;
@@ -13,6 +15,9 @@ export const ChatPage = ({ match, socket }) => {
 
   const messageRef = createRef(null);
   const [messages, setMessages] = useState([]);
+  const [modalType, setModalType] = useState("");
+  const [callType, setCallType] = useState("");
+  const [stream, setStream] = useState(null);
 
   const scrollToBottom = (node) => {
     if (node) {
@@ -38,12 +43,13 @@ export const ChatPage = ({ match, socket }) => {
                   isReachLastMessage,
                   isFetching
                 );
-                isReachLastMessage = newMessages?.data?.length ?? 0 !== 10;
+                isReachLastMessage = (newMessages?.data?.length ?? 0) !== 10;
                 tempMessages = [
                   ...(newMessages?.data?.reverse() ?? []),
                   ...(tempMessages ?? []),
                 ];
                 setMessages(tempMessages);
+                window.scrollBy(0, window.innerHeight / 25);
                 isFetching = false;
               }
             };
@@ -83,7 +89,6 @@ export const ChatPage = ({ match, socket }) => {
   useEffect(() => {
     if (socket) {
       socket.on("newMessage", ({ message }) => {
-        console.log("here");
         setMessages([...(messages ?? []), message]);
       });
     }
@@ -96,6 +101,45 @@ export const ChatPage = ({ match, socket }) => {
 
   useEffect(() => {
     if (socket) {
+      socket.on("receiveCall", () => {
+        setModalType("receiveCall");
+      });
+
+      socket.on("denyCall", () => {
+        setModalType("denyCall");
+        setCallType("");
+      });
+
+      socket.on("endCall", () => {
+        setModalType("endCall");
+        setCallType("");
+        stream?.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      });
+      socket.on("noPermission", () => {
+        setModalType("noPermission");
+        setCallType("");
+      });
+
+      socket.on("otherNotInRoom", () => {
+        setModalType("otherNotInRoom");
+        setCallType("");
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off("receiveCall");
+        socket.off("endCall");
+        socket.off("denyCall");
+        socket.off("noPermission");
+        socket.off("otherNotInRoom");
+      }
+    };
+  }, [callType]);
+
+  useEffect(() => {
+    if (socket) {
       socket.emit("joinRoom", { chatroomId });
     }
 
@@ -103,6 +147,7 @@ export const ChatPage = ({ match, socket }) => {
 
     return () => {
       if (socket) {
+        if (callType) socket.emit("endCall", chatroomId);
         socket.emit("leaveRoom", {
           chatroomId,
         });
@@ -142,8 +187,84 @@ export const ChatPage = ({ match, socket }) => {
     }
   };
 
+  const modalContent = () => {
+    switch (modalType) {
+      case "receiveCall":
+        return "You receive call from other user";
+      case "endCall":
+        return "Call End";
+      case "otherNotInRoom":
+        return "Other user is not in room";
+      case "noPermission":
+        return "Please make sure you and your friend turn on Camera and Microphone";
+      default:
+        return "Other user denied your call";
+    }
+  };
+
+  const modalTitle = () => {
+    switch (modalType) {
+      case "receiveCall":
+        return "Receive Call";
+      case "endCall":
+        return "Call End";
+      case "otherNotInRoom":
+        return "Information";
+      case "noPermission":
+        return "Permission";
+      default:
+        return "Deny Call";
+    }
+  };
+
+  const modalButton = () => {
+    switch (modalType) {
+      case "receiveCall":
+        return "Accept";
+      default:
+        return "Ok";
+    }
+  };
+
   return (
     <div className="container">
+      {modalType && (
+        <Modal
+          content={modalContent()}
+          onAccept={() => {
+            navigator.mediaDevices
+              .getUserMedia({
+                audio: true,
+                video: true,
+              })
+              .then((stream) => {
+                setStream(stream);
+                if (modalType === "receiveCall") setCallType("offer");
+                setModalType("");
+              })
+              .catch(function (e) {
+                // TODO: set modal as need permission
+                socket.emit("noPermission", { chatroomId });
+              });
+          }}
+          onClose={() => {
+            if (modalType === "receiveCall")
+              socket.emit("denyCall", { chatroomId, socketId: socket.id });
+            setModalType("");
+          }}
+          title={modalTitle()}
+          hasClose={modalType === "receiveCall"}
+          acceptButton={modalButton()}
+        />
+      )}
+      {callType && stream && (
+        <VideoCall
+          callType={callType}
+          socket={socket}
+          chatroomId={chatroomId}
+          localStream={stream}
+        />
+      )}
       <div className="fetch-new" ref={topRef}></div>
       <div className="messages">
         {messages?.length > 0 &&
@@ -158,7 +279,30 @@ export const ChatPage = ({ match, socket }) => {
             );
           })}
       </div>
-      <ChatInput messageRef={messageRef} sendMessage={sendMessage} />
+      <ChatInput
+        messageRef={messageRef}
+        sendMessage={sendMessage}
+        onVideoCall={() => {
+          navigator.mediaDevices
+            .getUserMedia({
+              audio: true,
+              video: true,
+            })
+            .then((stream) => {
+              setCallType("answer");
+              setStream(stream);
+              // setForceRerender(!forceRerender);
+              socket.emit("startCall", { chatroomId, socketId: socket.id });
+            })
+            .catch(function (e) {
+              // TODO: set modal as need permission
+            });
+        }}
+        onEndCall={() => {
+          setCallType("");
+        }}
+        isEndCall={callType}
+      />
     </div>
   );
 };

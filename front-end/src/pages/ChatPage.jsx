@@ -291,7 +291,6 @@ export const ChatPage = ({ match, socket }) => {
             .then((stream) => {
               setCallType("answer");
               setStream(stream);
-              // setForceRerender(!forceRerender);
               socket.emit("startCall", { chatroomId, socketId: socket.id });
             })
             .catch(function (e) {

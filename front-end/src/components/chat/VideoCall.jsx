@@ -21,7 +21,6 @@ export const VideoCall = ({
         },
       ],
     });
-    console.log(pc);
     friendsVideo = document.getElementById("remote");
     pc.onicecandidate = (event) => {
       event.candidate
@@ -49,7 +48,6 @@ export const VideoCall = ({
         .then(() => sendEstablishMessage({ sdp: pc.localDescription }));
     }
     return () => {
-      console.log("return here");
       pc.close();
       pc = null;
       localStream?.getTracks().forEach(function (track) {

@@ -8,22 +8,20 @@ Stack: MERN
 
 ### Front-end
 
-- Implement forgetPasswordPage()
+- Implement Add friend + create Room
 
 ### Back-end
 
-- Implement forgetPassword()
+- Done most cases
 
 ## Features
 
 - Create account:
 
   - Hashed password: SHA256. Done
-  - 0Auth: maybe??
 
 - Update account: Not implement
 
-  - Change Avatar(Firebase storage??):
   - Change password:
 
 - Login:
@@ -31,7 +29,6 @@ Stack: MERN
   - Email and Password: Done
   - JWT: store JWT in localstorage.
   - Backend check for JWT using `auth` middleware: Done
-  - Refresh Token: maybe??
 
 - Logout: Done
 
@@ -39,9 +36,9 @@ Stack: MERN
   - remove user state in front end
   - Move user in this device from notification list
 
-- Reset password (Consider)[https://blog.logrocket.com/implementing-a-secure-password-reset-in-node-js/]
+- Reset password:
 
-  - Send email with generated link: Not implement
+  - Send email with generated link: Done
 
 - Add Friend: Done backend
 
@@ -73,12 +70,9 @@ Stack: MERN
 
 - Video call (WebRTC): Only perfect case -> both clients in the room
 
-  - Mute:
-  - Turn off camera:
-  - Join Call:
-  - Start call:
-  - End call:
+  - Start call: Done
+  - End call: Done
 
-- Notification: (Consider)[https://medium.com/@seladir/how-to-implement-web-push-notifications-in-your-node-react-app-9bed79b53f34]:
+- Notification:
 
   - When receive chat: Done

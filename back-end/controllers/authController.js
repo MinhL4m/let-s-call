@@ -92,7 +92,7 @@ exports.requestResetPassword = async (req, res) => {
     createdAt: Date.now(),
   }).save();
 
-  const link = `http://localhost:3001/passwordReset?token=${token}&id=${user._id}`;
+  const link = `http://localhost:3000/passwordReset?token=${token}&id=${user._id}`;
 
   sendEmail(
     user.email,
@@ -119,5 +119,5 @@ exports.resetPassword = async (req, res) => {
   const hashedPassword = hash(password);
 
   await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
-  res.json("Password resetted");
+  res.json(true);
 };

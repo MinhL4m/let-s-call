@@ -20,6 +20,7 @@ require("./models/Chatroom");
 require("./models/Message");
 require("./models/User");
 require("./models/Notification");
+require("./models/ResetToken")
 
 // --------------Expres-------
 var app = express();

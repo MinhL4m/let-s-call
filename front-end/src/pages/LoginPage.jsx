@@ -3,7 +3,7 @@ import { Link, useHistory, withRouter } from "react-router-dom";
 import { useUserValue } from "../context/user-provider";
 import axios from "axios";
 
-function LoginPage({ setupSocket }) {
+function LoginPage() {
   const emailRef = createRef();
   const passwordRef = createRef();
   const history = useHistory();
@@ -78,8 +78,15 @@ function LoginPage({ setupSocket }) {
                 <small id="passwordHelp" className="text-danger">
                   {error}
                 </small>
-                <div className="d-flex justify-content-between d-flex align-items-baseline">
-                  <div className="form-group">
+
+                <div className="row justify-content-between align-items-baseline">
+                  <div className="col-sm-12 col-md-8 mb-3">
+                    <Link to="/register">Register</Link>
+                    <span>&nbsp;or&nbsp;</span>
+                    <Link to="/requestPasswordReset">Forgot password?</Link>
+                  </div>
+
+                  <div className="form-group col-sm-12 col-md-4">
                     <input
                       type="submit"
                       name="submit"
@@ -87,7 +94,6 @@ function LoginPage({ setupSocket }) {
                       value="submit"
                     />
                   </div>
-                  <Link to="/register">Register</Link>
                 </div>
               </form>
             </div>

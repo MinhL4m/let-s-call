@@ -116,6 +116,8 @@ exports.resetPassword = async (req, res) => {
 
   if (resetToken.token !== hashedToken) throw "Invalid or expired reset token";
 
+  await ResetToken.deleteOne({ _id: resetToken._id });
+
   const hashedPassword = hash(password);
 
   await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } });

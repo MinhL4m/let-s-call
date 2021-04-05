@@ -1,9 +1,12 @@
 const { EMAILREGEX } = require("../constants/index");
 const { hash } = require("../helpers/auth");
+const crypto = require("crypto");
 const jwt = require("jwt-then");
 const mongoose = require("mongoose");
+const sendEmail = require("../helpers/email/sendEmail");
 // Cannot get straight from model file since the model file is used by app.js
 const User = mongoose.model("User");
+const ResetToken = mongoose.model("ResetToken");
 
 /**
  * handle sign up with email and password
@@ -69,4 +72,52 @@ exports.checkLogIn = async (req, res) => {
   } catch (err) {
     res.json({ authenication: false });
   }
+};
+
+exports.requestResetPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) throw "Invalid Email!";
+  const user = await User.findOne({ email });
+  if (!user) throw "Email doesn't exist";
+
+  let resetToken = await ResetToken.findOne({ user: user._id });
+  if (resetToken) resetToken.deleteOne();
+
+  let token = crypto.randomBytes(32).toString("hex");
+  const hashedToken = hash(token);
+
+  await ResetToken({
+    user: user._id,
+    token: hashedToken,
+    createdAt: Date.now(),
+  }).save();
+
+  const link = `http://localhost:3001/passwordReset?token=${token}&id=${user._id}`;
+
+  sendEmail(
+    user.email,
+    "Password Reset Request",
+    { name: user.name, link: link },
+    "./template/requestResetPassword.handlebars"
+  );
+  return res.json({ message: "Reset Link sent!" });
+};
+
+exports.resetPassword = async (req, res) => {
+  const { userId, token, password } = req.body;
+
+  if (!userId || !token || !password) throw "Invalid Body";
+
+  let resetToken = await ResetToken.findOne({ user: userId });
+
+  if (!resetToken) throw "Invalid or expired reset token";
+
+  const hashedToken = hash(token);
+
+  if (resetToken.token !== hashedToken) throw "Invalid or expired reset token";
+
+  const hashedPassword = hash(password);
+
+  await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
+  res.json("Password resetted");
 };

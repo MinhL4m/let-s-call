@@ -13,6 +13,9 @@ mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    autoIndex: true,
   })
   .then(() => console.log("Mongooes Connected"))
   .catch((e) => console.log(e.message));
@@ -20,7 +23,7 @@ require("./models/Chatroom");
 require("./models/Message");
 require("./models/User");
 require("./models/Notification");
-require("./models/ResetToken")
+require("./models/ResetToken");
 
 // --------------Expres-------
 var app = express();

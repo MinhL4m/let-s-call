@@ -12,10 +12,12 @@
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
+    "handlebars": "^4.7.7",
     "http-errors": "~1.6.3",
     "jwt-then": "^1.0.1",
     "mongoose": "^5.12.2",
     "morgan": "~1.9.1",
+    "nodemailer": "^6.5.0",
     "socket.io": "^4.0.0",
     "web-push": "^3.4.4"
   }

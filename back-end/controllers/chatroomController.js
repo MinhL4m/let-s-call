@@ -4,21 +4,29 @@ const Chatroom = mongoose.model("Chatroom");
 
 const createChatroom = async (req, res) => {
   const { userId, friendId, userName, friendName } = req.body;
-
+  console.log("Detail: >>>", userId, friendId, userName, friendName);
   const chatroomExists = await Chatroom.findOne({
     owners: { $all: [userId, friendId] },
   });
 
-  if (chatroomExists) throw "Room is already existed";
+  if (chatroomExists) {
+    res.json({
+      room: chatroomExists,
+      new: false,
+    });
+  } else {
+    const chatroom = new Chatroom({
+      name: `${userName}, ${friendName}`,
+      owners: [userId, friendId],
+    });
 
-  const chatroom = new Chatroom({
-    name: `${userName}, ${friendName}`,
-    owners: [userId, friendId],
-  });
-
-  await chatroom.save((err, room) => {
-    res.json(room);
-  });
+    await chatroom.save((err, room) => {
+      res.json({
+        room,
+        new: true,
+      });
+    });
+  }
 };
 
 const getAllChatroom = async (req, res) => {

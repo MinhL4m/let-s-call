@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useUserValue } from "../context/user-provider";
 import { Link, Route, withRouter } from "react-router-dom";
 import { ChatroomPage } from "./ChatroomPage";
-import { FriendPage } from "./FriendPage";
+import FriendPage from "./FriendPage";
 import { ChatPage } from "./ChatPage";
 import { subscribeUser, unsubscribeUser } from "../helpers/notificationHelper";
 import io from "socket.io-client";

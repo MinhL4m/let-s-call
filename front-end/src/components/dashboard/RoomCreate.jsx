@@ -52,9 +52,12 @@ export const RoomCreate = () => {
                 <li
                   key={friend._id}
                   className="list-group-item"
-                  onClick={(e) => setInput(friend.name)}
+                  onClick={(e) => {
+                    setInput(`${friend.name}#${friend.email}`);
+                    setInputText("");
+                  }}
                 >
-                  {friend.name}
+                  {`${friend.name}#${friend.email}`}
                 </li>
               ))}
             </ul>

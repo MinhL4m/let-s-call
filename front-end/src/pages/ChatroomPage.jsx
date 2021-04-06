@@ -3,7 +3,7 @@ import { useUserValue } from "../context/user-provider";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { RoomCreate } from "../components/dashboard/RoomCreate";
-export function ChatroomPage({ socket }) {
+export function ChatroomPage() {
   const [chatrooms, setChatrooms] = useState([]);
   const { user } = useUserValue();
 

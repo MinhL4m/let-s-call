@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const chatRoomSchema = mongoose.Schema(
+const messageSchema = mongoose.Schema(
   {
     chatroom: {
       // get Id of ref schema
@@ -27,4 +27,4 @@ const chatRoomSchema = mongoose.Schema(
   }
 );
 
-module.export = mongoose.model("Message", chatRoomSchema);
+module.export = mongoose.model("Message", messageSchema);

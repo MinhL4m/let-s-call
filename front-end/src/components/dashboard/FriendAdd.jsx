@@ -17,7 +17,7 @@ export const FriendAdd = ({ addUser }) => {
           userId: user.id,
           friendId: id,
         });
-        res ? addUser(res) : setError("Something went wrong");
+        res ? addUser(res.data) : setError("Something went wrong");
       } catch (e) {
         if (e.response) {
           setError(e.response.data.message);
@@ -31,6 +31,7 @@ export const FriendAdd = ({ addUser }) => {
   return (
     <div className="mt-5">
       <h2 className="text-center ">Add Friend</h2>
+      <p>Your Id: {user.id}</p>
       <div className="TypeAheadDropDown">
         <input placeholder="Friend Id" className="form-control" ref={idRef} />
 

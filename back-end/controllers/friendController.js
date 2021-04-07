@@ -13,7 +13,12 @@ const getFriendsByName = async (req, res) => {
     name: { $regex: name, $options: "i" },
     _id: { $in: [...currentUser.friends] },
   });
-  res.json(listUser);
+  const returnList = listUser.map((user) => ({
+    _id: user._id,
+    email: user.email,
+    name: user.name,
+  }));
+  res.json(returnList);
 };
 
 const getAllFriends = async (req, res) => {
@@ -24,7 +29,12 @@ const getAllFriends = async (req, res) => {
   const listUser = await User.find({
     _id: { $in: [...currentUser.friends] },
   });
-  res.json(listUser);
+  const returnList = listUser.map((user) => ({
+    _id: user._id,
+    email: user.email,
+    name: user.name,
+  }));
+  res.json(returnList);
 };
 
 const addFriend = async (req, res) => {
@@ -44,7 +54,7 @@ const addFriend = async (req, res) => {
     { new: true }
   );
 
-  res.json(friend);
+  res.json({ _id: friend._id, email: friend.email, name: friend.name });
 };
 
 const unFriend = async (req, res) => {
@@ -64,8 +74,10 @@ const unFriend = async (req, res) => {
   const room = await Chatroom.findOne({
     owners: { $all: [userId, friendId] },
   });
-  await Chatroom.deleteMany({ _id: room._id });
-  await Message.deleteMany({ chatroom: room._id });
+  if (room) {
+    await Chatroom.deleteMany({ _id: room._id });
+    await Message.deleteMany({ chatroom: room._id });
+  }
   res.json(true);
 };
 

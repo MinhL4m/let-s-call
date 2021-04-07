@@ -5,7 +5,6 @@ export const VideoCall = ({
   socket,
   chatroomId,
   localStream,
-  setForceRerender,
 }) => {
   let friendsVideo;
 
@@ -55,7 +54,6 @@ export const VideoCall = ({
       });
       socket.off("establishCall");
       socket.emit("endCall", { chatroomId });
-      setForceRerender();
     };
   }, []);
 

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const User = mongoose.model("User");
+const Message = mongoose.model("Message");
+const Chatroom = mongoose.model("Chatroom");
 
 const getFriendsByName = async (req, res) => {
   const { name, userId } = req.query;
@@ -57,8 +59,13 @@ const unFriend = async (req, res) => {
   );
   await User.updateOne(
     { _id: friendId },
-    { $addToSet: { friends: { $in: [userId] } } }
+    { $pull: { friends: { $in: [userId] } } }
   );
+  const room = await Chatroom.findOne({
+    owners: { $all: [userId, friendId] },
+  });
+  await Chatroom.deleteMany({ _id: room._id });
+  await Message.deleteMany({ chatroom: room._id });
   res.json(true);
 };
 

@@ -4,7 +4,6 @@ const Chatroom = mongoose.model("Chatroom");
 
 const createChatroom = async (req, res) => {
   const { userId, friendId, userName, friendName } = req.body;
-  console.log("Detail: >>>", userId, friendId, userName, friendName);
   const chatroomExists = await Chatroom.findOne({
     owners: { $all: [userId, friendId] },
   });

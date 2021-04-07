@@ -37,6 +37,22 @@ function FriendPage() {
     }
   };
 
+  const unFriend = async (friendId) => {
+    try {
+      const res = await axios.put("http://localhost:3001/friend/unfriend", {
+        userId: user.id,
+        friendId,
+      });
+
+      if (res.data) {
+        const newList = friends.filter((ele) => ele._id !== friendId);
+        setFriends(newList);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div className="container">
       <FriendAdd addUser={(friend) => setFriends([...friends, friend])} />
@@ -50,13 +66,22 @@ function FriendPage() {
               className="list-group-item d-flex d-flex justify-content-between"
             >
               <div>{friend.name}</div>
-              <input
-                type="button"
-                name="chat"
-                className="btn btn-md btn-outline-dark"
-                value="Chat"
-                onClick={() => onChat(friend.name, friend._id)}
-              />
+              <div>
+                <input
+                  type="button"
+                  name="chat"
+                  className="btn btn-md btn-outline-dark"
+                  value="Chat"
+                  onClick={() => onChat(friend.name, friend._id)}
+                />
+                <input
+                  type="button"
+                  name="remove"
+                  className="btn btn-md btn-outline-danger send-btn"
+                  value="Unfriend"
+                  onClick={() => unFriend(friend._id)}
+                />
+              </div>
             </li>
           ))}
       </ul>

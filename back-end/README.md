@@ -62,3 +62,4 @@ Others Middleware will catch other type of error
 
 - [Doc](https://nodemailer.com/about/)
 - For Gmail: [Link](https://nodemailer.com/usage/using-gmail/)
+- combine with `handlebars` to custom the email.

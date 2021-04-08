@@ -89,12 +89,6 @@ function DashboardPage({ history }) {
           >
             Friends
           </Link>
-          <Link
-            to="/settings"
-            className="list-group-item list-group-item-action bg-light"
-          >
-            Settings
-          </Link>
           <a
             href="#"
             onClick={logout}

@@ -3,8 +3,10 @@ import { useUserValue } from "../context/user-provider";
 import { useHistory, withRouter } from "react-router-dom";
 import axios from "axios";
 import { FriendAdd } from "../components/dashboard/FriendAdd";
+import { Modal } from "../components/common/Modal";
 function FriendPage() {
   const [friends, setFriends] = useState([]);
+  const [isError, setIsError] = useState(false);
   const { user } = useUserValue();
   const history = useHistory();
 
@@ -33,7 +35,7 @@ function FriendPage() {
 
       history.push(`/chat/${res.data.room._id}`);
     } catch (e) {
-      //TODO Modal pop up
+      setIsError(true);
     }
   };
 
@@ -49,12 +51,24 @@ function FriendPage() {
         setFriends(newList);
       }
     } catch (e) {
-      console.log(e);
+      setIsError(true);
     }
   };
 
   return (
     <div className="container">
+      {isError && (
+        <Modal
+          content="Something thing went wrong"
+          onClose={() => {
+            setIsError(false);
+          }}
+          title="Error"
+          onAccept={() => {
+            setIsError(false);
+          }}
+        />
+      )}
       <FriendAdd addUser={(friend) => setFriends([...friends, friend])} />
       <hr />
       <h2 className="text-center ">List Friend</h2>

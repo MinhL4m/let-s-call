@@ -196,7 +196,9 @@ export const ChatPage = ({ match, socket }) => {
       case "otherNotInRoom":
         return "Other user is not in room";
       case "noPermission":
-        return "Please make sure you and your friend turn on Camera and Microphone";
+        return "Please make sure your friend turn on Camera and Microphone";
+      case "requestPermission":
+        return "Please make sure you turn on Camera and Microphone";
       default:
         return "Other user denied your call";
     }
@@ -211,6 +213,7 @@ export const ChatPage = ({ match, socket }) => {
       case "otherNotInRoom":
         return "Information";
       case "noPermission":
+      case "requestPermission":
         return "Permission";
       default:
         return "Deny Call";
@@ -243,7 +246,7 @@ export const ChatPage = ({ match, socket }) => {
                 setModalType("");
               })
               .catch(function (e) {
-                // TODO: set modal as need permission
+                setModalType("requestPermission");
                 socket.emit("noPermission", { chatroomId });
               });
           }}
@@ -294,7 +297,7 @@ export const ChatPage = ({ match, socket }) => {
               socket.emit("startCall", { chatroomId, socketId: socket.id });
             })
             .catch(function (e) {
-              // TODO: set modal as need permission
+              setModalType("requestPermission");
             });
         }}
         onEndCall={() => {

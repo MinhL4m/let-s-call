@@ -22,7 +22,9 @@ export function ChatroomPage() {
 
   return (
     <div className="container">
-      <RoomCreate />
+      <RoomCreate
+        setChatrooms={(newRoom) => setChatrooms([...chatrooms, newRoom ])}
+      />
       <hr />
       <h2 className="text-center ">List Room</h2>
       <ul className="list-group list-group-flush">
@@ -39,7 +41,9 @@ export function ChatroomPage() {
             </li>
           ))}
       </ul>
-      {chatrooms.length === 0 && <p className="text-center mt-3">Not room found</p>}
+      {chatrooms.length === 0 && (
+        <p className="text-center mt-3">Not room found</p>
+      )}
     </div>
   );
 }

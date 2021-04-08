@@ -1,11 +1,22 @@
 const { NAMEREGEX } = require("../constants/index");
 const mongoose = require("mongoose");
 const Chatroom = mongoose.model("Chatroom");
+const User = mongoose.model("User");
 
 const createChatroom = async (req, res) => {
-  const { userId, friendId, userName, friendName } = req.body;
+  const { userId, userName, friendString } = req.body;
+
+  if(!friendString) throw "Friend Name cannot be empty"
+
+  //[0]: name, [1]: email
+  const friendInfo = friendString.split(";");
+
+  const friend = await User.findOne({ name: friendInfo[0], email: friendInfo[1] });
+
+  if(!friend) throw "User doesn't exist"
+
   const chatroomExists = await Chatroom.findOne({
-    owners: { $all: [userId, friendId] },
+    owners: { $all: [userId, friend._id] },
   });
 
   if (chatroomExists) {
@@ -15,8 +26,8 @@ const createChatroom = async (req, res) => {
     });
   } else {
     const chatroom = new Chatroom({
-      name: `${userName}, ${friendName}`,
-      owners: [userId, friendId],
+      name: `${userName}, ${friend.name}`,
+      owners: [userId, friend._id],
     });
 
     await chatroom.save((err, room) => {

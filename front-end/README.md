@@ -43,6 +43,8 @@ const newSocket = io(<Domain>, {
 
 - Source: [Link](https://medium.com/@seladir/how-to-implement-web-push-notifications-in-your-node-react-app-9bed79b53f34)
 
+- Service worker doesn't work with Dev env, so `public/custom-sw.js` was added.
+
 --
 
 ## useQuery to get param from url

@@ -4,7 +4,7 @@ import { useDebouncedSearch } from "../../hooks/useDebouncedSearch";
 import { useState } from "react";
 import "../../styles/roomCreate.css";
 
-export const RoomCreate = () => {
+export const RoomCreate = ({ setChatrooms }) => {
   /**Debounce Search */
   const { user } = useUserValue();
 
@@ -16,8 +16,32 @@ export const RoomCreate = () => {
   const useSearchUser = () =>
     useDebouncedSearch((text) => searchForFriends(text));
 
-  const { inputText, setInputText, searchResults } = useSearchUser();
+  const { setInputText, searchResults } = useSearchUser();
   const [input, setInput] = useState("");
+  const [error, setError] = useState("");
+
+  const createRoom = async () => {
+    setInput("");
+    setError("");
+    try {
+      const res = await axios.post("http://localhost:3001/chatroom", {
+        userId: user.id,
+        userName: user.name,
+        friendString: input,
+      });
+      if (res.data.new) {
+        setChatrooms(res.data.room);
+      } else {
+        setError("Room existed");
+      }
+    } catch (e) {
+      if (e.response) {
+        setError(e.response.data.message);
+      } else {
+        setError("Something went wrong");
+      }
+    }
+  };
 
   return (
     <div className="mt-5">
@@ -25,7 +49,7 @@ export const RoomCreate = () => {
       <div className="TypeAheadDropDown">
         <input
           value={input}
-          placeholder="Friend Name"
+          placeholder="Friend Name;Friend email"
           onChange={(e) => {
             setInput(e.target.value.trim());
             setInputText(e.target.value.trim());
@@ -33,15 +57,16 @@ export const RoomCreate = () => {
           className="form-control"
         />
         <div className="suggest-container">
-          {searchResults.error && (
+          {error && (
             <small id="passwordHelp" className="text-danger">
-              {searchResults.error.message}
+              {error}
             </small>
           )}
           <div className="create-btn d-flex flex-row-reverse ">
             <input
               type="button"
               name="create"
+              onClick={createRoom}
               className="btn btn-md btn-outline-dark mt-3"
               value="Create"
             />
@@ -53,11 +78,11 @@ export const RoomCreate = () => {
                   key={friend._id}
                   className="list-group-item"
                   onClick={(e) => {
-                    setInput(`${friend.name}#${friend.email}`);
+                    setInput(`${friend.name};${friend.email}`);
                     setInputText("");
                   }}
                 >
-                  {`${friend.name}#${friend.email}`}
+                  {`${friend.name};${friend.email}`}
                 </li>
               ))}
             </ul>

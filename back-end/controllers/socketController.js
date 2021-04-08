@@ -69,7 +69,7 @@ const onConnection = (socket, io) => {
   });
 
   socket.on("noPermission", ({ chatroomId }) => {
-    io.to(chatroomId).emit("noPermission");
+    socket.broadcast.to(chatroomId).emit("noPermission");
   });
 };
 

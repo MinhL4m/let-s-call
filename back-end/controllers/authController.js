@@ -1,4 +1,4 @@
-const { EMAILREGEX } = require("../constants/index");
+const { EMAILREGEX, NAMEREGEX } = require("../constants/index");
 const { hash } = require("../helpers/auth");
 const crypto = require("crypto");
 const jwt = require("jwt-then");
@@ -14,6 +14,7 @@ const ResetToken = mongoose.model("ResetToken");
 exports.signUp = async (req, res) => {
   const { name, email, password } = req.body;
 
+  if (!NAMEREGEX.test(name)) throw "Name is invalid";
   if (!EMAILREGEX.test(email)) throw "Email is not correct";
   if (password.length < 5) throw "Password must be atleast 6 characters long.";
 

@@ -49,3 +49,16 @@ Others Middleware will catch other type of error
 - [Doc](https://socket.io/docs/v3/rooms/)
 
 - Look at file `bin/www` to start study the code
+
+--
+
+## notifcation
+
+- [Doc](https://www.npmjs.com/package/web-push)
+
+--
+
+## nodemailer
+
+- [Doc](https://nodemailer.com/about/)
+- For Gmail: [Link](https://nodemailer.com/usage/using-gmail/)

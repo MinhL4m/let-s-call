@@ -36,3 +36,15 @@ const newSocket = io(<Domain>, {
 - Use `on()` to check for event
 
 - Use `emit()` to emit event
+
+--
+
+## notification
+
+- Source: [Link](https://medium.com/@seladir/how-to-implement-web-push-notifications-in-your-node-react-app-9bed79b53f34)
+
+--
+
+## useQuery to get param from url
+
+- Check `hooks/useQuery.js`

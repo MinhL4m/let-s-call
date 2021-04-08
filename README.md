@@ -1,70 +1,66 @@
 # let's-chat
 
-Description: Message and Video Call Application.
+## Overview
 
-Stack: MERN
+- Friend:
+  - User can add friends by using friend's id number.
+  - User can unfriend. This will also remove all chat messages and rooms related to the removed friend.
 
-## TODO
+- Chatroom:
+  - Each room will have only 2 chat members.
+  - User can create a room with a friend.
+  - User can start or receive calls.
+  - User can send or receive messages.
 
-- Clean up and create document
+- Notification:
+  - Notification will be pushed with the chat message.
 
-## Features
+- Authentication:
+  - User can create an account.
+  - Login.
+  - If user forgets his/her password, the user can request a reset password with email.
+  - Logout.
 
-- Create account:
+## Technical overview
 
-  - Hashed password: SHA256. Done
+- Nodejs, Express, React, Socket.io, WebRTC, Mongodb
+- Webpush, service worker for notifcation.
+- nodemailer for email.
+- Auth: 
+  - 256 hash function for password and reset token.
+  - JWT
 
-- Update account: Not implement
+## Demo
 
-  - Change password:
+### Forget Password
 
-- Login:
+- The requested URL will be attached with the token that will be expired after 2 minutes.
+![](demo/forget-pass.gif)
 
-  - Email and Password: Done
-  - JWT: store JWT in localstorage.
-  - Backend check for JWT using `auth` middleware: Done
+### Create Room
 
-- Logout: Done
+- The format for the input is: `<username>;<email>`
+- The search function is built with debounce. This helps reduce the number of request.
+![](demo/create-room.gif)
 
-  - Remove JWT in storage
-  - remove user state in front end
-  - Move user in this device from notification list
+### Chat and notification
 
-- Reset password: Done
+- The application will stored `endpoint` in database. When the user receive message, server will push notification to all `endpoint`.
+- `endpoint` for specific machine will be removed when user log out using that machine.
+![](demo/chat-noti.gif)
 
-  - Send email with generated link: Done
+### Load older message
 
-- Add Friend: Done
+- Pagination was implemented. Each time, user scroll to the top, the application will load 10 older messages until reaching the last message. After reach the last message, the application will not push any request even user scroll to the top.
+![](demo/load-on-scroll.gif)
 
-  - Using ID
+### Call
 
-- Unfriend: Done
+- There are `Modal` telling user what error occured:
+  - User's friend didn't turn on his/her camera and microphone.
+  - User didn't turn on his/her camera and microphone.
+  - User recevie phone call.
+  - User's friend is currently offline.
+  - Call end.
+![](demo/call.gif)
 
-- Get room: Done
-
-  - Get room belong to user: Only get all room!
-
-- Create room: Done
-
-  - Create room with list of user only: Backend Done
-  - Suggest friend appear when type: Done -> will show `username,id`
-    - Using rebounce to limit the fetch: Done
-
-- Join room: Done
-
-  - Join room and connect socket to room: Done
-
-- Send and receive message: Done
-
-  - Send and receive message from all user in the room: Done
-    - Text: Done
-  - Load old messages: Done -> old message old onscroll
-
-- Video call (WebRTC): Only perfect case -> both clients in the room
-
-  - Start call: Done
-  - End call: Done
-
-- Notification: Done
-
-  - When receive chat: Done

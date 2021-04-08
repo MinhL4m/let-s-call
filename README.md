@@ -6,13 +6,7 @@ Stack: MERN
 
 ## TODO
 
-### Front-end
-
-- Implement Add friend + create Room
-
-### Back-end
-
-- Done most cases
+- Clean up and create document
 
 ## Features
 
@@ -36,36 +30,34 @@ Stack: MERN
   - remove user state in front end
   - Move user in this device from notification list
 
-- Reset password:
+- Reset password: Done
 
   - Send email with generated link: Done
 
-- Add Friend: Done backend
+- Add Friend: Done
 
   - Using ID
 
-- Unfriend: Done backend
+- Unfriend: Done
 
-- Get room:
+- Get room: Done
 
   - Get room belong to user: Only get all room!
-  - Update when receive new chat
 
-- Create room:
+- Create room: Done
 
-  - Create room with list of user only: Only create room with name and anyone can join
-  - Suggest friend appear when type:
-    - Using rebounce to limit the fetch
+  - Create room with list of user only: Backend Done
+  - Suggest friend appear when type: Done -> will show `username,id`
+    - Using rebounce to limit the fetch: Done
 
-- Join room:
+- Join room: Done
 
   - Join room and connect socket to room: Done
 
-- Send and receive message:
+- Send and receive message: Done
 
   - Send and receive message from all user in the room: Done
     - Text: Done
-    - Image + file: Firebase Storage are incosideration
   - Load old messages: Done -> old message old onscroll
 
 - Video call (WebRTC): Only perfect case -> both clients in the room
@@ -73,6 +65,6 @@ Stack: MERN
   - Start call: Done
   - End call: Done
 
-- Notification:
+- Notification: Done
 
   - When receive chat: Done
